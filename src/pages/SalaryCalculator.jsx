@@ -448,7 +448,7 @@ export default function SalaryCalculator() {
                         </div>
 
                         {/* Printable Area */}
-                        <div className="print-only" style={{ display: 'block' }}>
+                        <div className="payslip-print-area" style={{ display: 'block' }}>
                             <div style={{ textAlign: 'center', marginBottom: '2rem', borderBottom: '2px solid var(--border-color)', paddingBottom: '1rem' }}>
                                 <h1 style={{ color: 'var(--primary)', marginBottom: '0.25rem' }}>SPT Hospital</h1>
                                 <p style={{ color: 'var(--text-muted)' }}>Official Salary Slip: {monthNames[selectedMonth]} {selectedYear}</p>

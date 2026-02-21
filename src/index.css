@@ -244,35 +244,38 @@ button {
 /* Print Styles */
 @media print {
 
+  /* Hide everything by default */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Show only the payslip printable area */
+  .payslip-print-area,
+  .payslip-print-area * {
+    visibility: visible;
+  }
+
+  /* Position payslip to fill the page */
+  .payslip-print-area {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 2cm;
+    box-sizing: border-box;
+    background: white;
+  }
+
+  /* Hide no-print elements inside the visible area */
   .no-print,
   .no-print * {
     display: none !important;
-  }
-
-  .print-only {
-    display: block !important;
-  }
-
-  body,
-  .app-layout,
-  .app-main,
-  .app-content {
-    background-color: white !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-  }
-
-  .payslip-modal {
-    position: static !important;
-    box-shadow: none !important;
-    border: none !important;
-    width: 100% !important;
-    max-width: none !important;
+    visibility: hidden !important;
   }
 
   @page {
-    margin: 2cm;
+    margin: 1.5cm;
+    size: A4;
   }
 }
 
