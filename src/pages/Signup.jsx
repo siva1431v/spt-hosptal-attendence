@@ -10,10 +10,11 @@ export default function Signup() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const { signup } = useAppContext();
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         if (!name || !email || !password || !confirmPassword) {
@@ -28,11 +29,14 @@ export default function Signup() {
             setError('Password must be at least 6 characters.');
             return;
         }
-        const success = signup(name, email, password);
-        if (success) {
+        setLoading(true);
+        try {
+            await signup(name, email, password);
             navigate('/');
-        } else {
-            setError('Could not create account. Please try again.');
+        } catch (err) {
+            setError(err.message || 'Could not create account. Please try again.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -132,19 +136,19 @@ export default function Signup() {
                         </div>
 
                         <button type="submit"
+                            disabled={loading}
                             style={{
                                 width: '100%', padding: '0.875rem',
                                 background: 'linear-gradient(135deg, hsl(210, 90%, 55%), hsl(210, 90%, 45%))',
                                 color: 'white', border: 'none', borderRadius: '8px',
-                                fontSize: '0.9375rem', fontWeight: 600, cursor: 'pointer',
+                                fontSize: '0.9375rem', fontWeight: 600, cursor: loading ? 'not-allowed' : 'pointer',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
-                                transition: 'opacity 0.2s', fontFamily: 'inherit', marginTop: '0.25rem'
+                                transition: 'opacity 0.2s', fontFamily: 'inherit', marginTop: '0.25rem',
+                                opacity: loading ? 0.7 : 1
                             }}
-                            onMouseEnter={e => e.currentTarget.style.opacity = '0.9'}
-                            onMouseLeave={e => e.currentTarget.style.opacity = '1'}
                         >
                             <UserPlus size={18} />
-                            Create Account
+                            {loading ? 'Creating Account...' : 'Create Account'}
                         </button>
                     </form>
 

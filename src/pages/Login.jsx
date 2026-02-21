@@ -8,21 +8,25 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const { login } = useAppContext();
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         if (!email || !password) {
             setError('Please fill in all fields.');
             return;
         }
-        const success = login(email, password);
-        if (success) {
+        setLoading(true);
+        try {
+            await login(email, password);
             navigate('/');
-        } else {
-            setError('Invalid credentials. Please try again.');
+        } catch (err) {
+            setError(err.message || 'Invalid credentials. Please try again.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -139,19 +143,19 @@ export default function Login() {
 
                         <button
                             type="submit"
+                            disabled={loading}
                             style={{
                                 width: '100%', padding: '0.875rem',
                                 background: 'linear-gradient(135deg, hsl(210, 90%, 55%), hsl(210, 90%, 45%))',
                                 color: 'white', border: 'none', borderRadius: '8px',
-                                fontSize: '0.9375rem', fontWeight: 600, cursor: 'pointer',
+                                fontSize: '0.9375rem', fontWeight: 600, cursor: loading ? 'not-allowed' : 'pointer',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
-                                transition: 'opacity 0.2s', fontFamily: 'inherit', marginTop: '0.25rem'
+                                transition: 'opacity 0.2s', fontFamily: 'inherit', marginTop: '0.25rem',
+                                opacity: loading ? 0.7 : 1
                             }}
-                            onMouseEnter={e => e.target.style.opacity = '0.9'}
-                            onMouseLeave={e => e.target.style.opacity = '1'}
                         >
                             <LogIn size={18} />
-                            Sign In
+                            {loading ? 'Signing in...' : 'Sign In'}
                         </button>
                     </form>
 

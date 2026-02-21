@@ -14,8 +14,8 @@ export default function Sidebar() {
         { to: '/salary', icon: Calculator, label: 'Salary Calculator' },
     ];
 
-    const handleLogout = () => {
-        logout();
+    const handleLogout = async () => {
+        await logout();
         navigate('/login');
     };
 

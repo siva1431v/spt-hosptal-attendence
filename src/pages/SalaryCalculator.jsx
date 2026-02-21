@@ -1,6 +1,7 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { useAppContext } from '../context/AppContext';
-import { Calculator, Download, ChevronLeft, ChevronRight, CalendarDays, Edit3, Printer, X, Save, Check } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { Calculator, Download, ChevronLeft, ChevronRight, CalendarDays, Edit3, Printer, X, Save, Check, Loader } from 'lucide-react';
 
 export default function SalaryCalculator() {
     const { staff } = useAppContext();
@@ -10,28 +11,77 @@ export default function SalaryCalculator() {
     const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth());
     const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear());
 
-    // Local state to store manual inputs per staff per month { "YYYY-MM": { staffId: { present: 0, leave: 0, offDuty: 0, collection: 0 } } }
-    const [manualInputs, setManualInputs] = useState(() => {
-        try {
-            const saved = localStorage.getItem('hospital_salary_inputs');
-            return saved ? JSON.parse(saved) : {};
-        } catch (e) {
-            console.error('Failed to parse saved inputs', e);
-            return {};
-        }
-    });
-
+    // Salary inputs: { staffId: { present, leave, offDuty, halfDays, collection } }
+    // Stored in Supabase `salary_inputs` table, keyed by month_key
+    const [manualInputs, setManualInputs] = useState({});
+    const [inputsLoading, setInputsLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
 
-    const handleSaveInputs = () => {
-        try {
-            localStorage.setItem('hospital_salary_inputs', JSON.stringify(manualInputs));
-            setIsSaving(true);
-            setTimeout(() => setIsSaving(false), 2000);
-        } catch (e) {
-            console.error('Failed to save inputs:', e);
-            alert('Failed to save data. Storage might be full.');
+    // These must be defined BEFORE the useCallback that references them
+    const activeStaff = staff.filter(s => s.status === 'Active');
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+    const getDaysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
+    const daysInCurrentMonth = getDaysInMonth(selectedMonth, selectedYear);
+    const monthKey = `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}`;
+
+    // Fetch salary inputs for selected month from Supabase
+    const fetchSalaryInputs = useCallback(async () => {
+        if (!activeStaff.length) return;
+        setInputsLoading(true);
+        const { data, error } = await supabase
+            .from('salary_inputs')
+            .select('*')
+            .eq('month_key', monthKey);
+
+        if (error) {
+            console.error('Error loading salary inputs:', error.message);
+        } else {
+            // Build the local manualInputs map structure { [monthKey]: { [staffId]: { ... } } }
+            const monthData = {};
+            data.forEach(row => {
+                monthData[row.staff_id] = {
+                    present: row.present || 0,
+                    halfDays: row.half_days || 0,
+                    leave: row.leave || 0,
+                    offDuty: row.off_duty || 0,
+                    collection: row.collection || 0
+                };
+            });
+            setManualInputs(prev => ({ ...prev, [monthKey]: monthData }));
         }
+        setInputsLoading(false);
+    }, [monthKey, activeStaff.length]);
+
+    // Re-fetch when month changes
+    useEffect(() => {
+        fetchSalaryInputs();
+    }, [fetchSalaryInputs]);
+
+    // Save all inputs for the current month to Supabase
+    const handleSaveInputs = async () => {
+        setIsSaving(true);
+        const monthData = manualInputs[monthKey] || {};
+        const upserts = activeStaff.map(person => ({
+            staff_id: person.id,
+            month_key: monthKey,
+            present: Number(monthData[person.id]?.present) || 0,
+            half_days: Number(monthData[person.id]?.halfDays) || 0,
+            leave: Number(monthData[person.id]?.leave) || 0,
+            off_duty: Number(monthData[person.id]?.offDuty) || 0,
+            collection: Number(monthData[person.id]?.collection) || 0
+        }));
+
+        const { error } = await supabase
+            .from('salary_inputs')
+            .upsert(upserts, { onConflict: 'staff_id,month_key' });
+
+        if (error) {
+            console.error('Error saving salary inputs:', error.message);
+            alert('Failed to save data: ' + error.message);
+        }
+        setIsSaving(false);
+        setTimeout(() => setIsSaving(false), 2000);
     };
 
     const handleExportPayroll = () => {
@@ -105,10 +155,6 @@ export default function SalaryCalculator() {
     // State for viewing/printing a specific staff member's payslip
     const [selectedSlip, setSelectedSlip] = useState(null);
 
-    const activeStaff = staff.filter(s => s.status === 'Active');
-
-    const monthNames = ["January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"];
 
     const handleMonthChange = (direction) => {
         let newMonth = selectedMonth + direction;
@@ -126,9 +172,7 @@ export default function SalaryCalculator() {
         setSelectedYear(newYear);
     };
 
-    const getDaysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
-    const daysInCurrentMonth = getDaysInMonth(selectedMonth, selectedYear);
-    const monthKey = `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}`;
+
 
     const handleInput = (staffId, field, value) => {
         let valToStore = value;
