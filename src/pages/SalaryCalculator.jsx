@@ -449,74 +449,74 @@ export default function SalaryCalculator() {
 
                         {/* Printable Area */}
                         <div className="payslip-print-area" style={{ display: 'block' }}>
-                            <div style={{ textAlign: 'center', marginBottom: '2rem', borderBottom: '2px solid var(--border-color)', paddingBottom: '1rem' }}>
-                                <h1 style={{ color: 'var(--primary)', marginBottom: '0.25rem' }}>SPT Hospital</h1>
-                                <p style={{ color: 'var(--text-muted)' }}>Official Salary Slip: {monthNames[selectedMonth]} {selectedYear}</p>
+                            <div style={{ textAlign: 'center', marginBottom: '1rem', borderBottom: '2px solid var(--border-color)', paddingBottom: '0.75rem' }}>
+                                <h1 style={{ color: 'var(--primary)', marginBottom: '0.15rem', fontSize: '1.5rem' }}>SPT Hospital</h1>
+                                <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: '0.9rem' }}>Official Salary Slip: {monthNames[selectedMonth]} {selectedYear}</p>
                             </div>
 
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
                                 <div>
-                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '0.25rem' }}>Employee Name</p>
-                                    <h3 style={{ margin: 0 }}>{selectedSlip.name}</h3>
+                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '0.15rem' }}>Employee Name</p>
+                                    <h3 style={{ margin: 0, fontSize: '1rem' }}>{selectedSlip.name}</h3>
                                 </div>
                                 <div style={{ textAlign: 'right' }}>
-                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '0.25rem' }}>Role Designatnion</p>
-                                    <h3 style={{ margin: 0 }}>{selectedSlip.role}</h3>
+                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '0.15rem' }}>Role / Designation</p>
+                                    <h3 style={{ margin: 0, fontSize: '1rem' }}>{selectedSlip.role}</h3>
                                 </div>
                             </div>
 
-                            <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '2rem' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '1rem', fontSize: '0.875rem' }}>
                                 <thead>
                                     <tr style={{ backgroundColor: 'var(--bg-color)', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)' }}>
-                                        <th style={{ padding: '1rem', textAlign: 'left' }}>Description</th>
-                                        <th style={{ padding: '1rem', textAlign: 'right' }}>Amount / Days</th>
+                                        <th style={{ padding: '0.45rem 0.75rem', textAlign: 'left' }}>Description</th>
+                                        <th style={{ padding: '0.45rem 0.75rem', textAlign: 'right' }}>Amount / Days</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr style={{ borderBottom: '1px solid var(--bg-color)' }}>
-                                        <td style={{ padding: '1rem' }}>Base Monthly Salary</td>
-                                        <td style={{ padding: '1rem', textAlign: 'right' }}>₹{Number(selectedSlip.baseSalary || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                        <td style={{ padding: '0.45rem 0.75rem' }}>Base Monthly Salary</td>
+                                        <td style={{ padding: '0.45rem 0.75rem', textAlign: 'right' }}>₹{Number(selectedSlip.baseSalary || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
                                     </tr>
                                     <tr style={{ borderBottom: '1px solid var(--bg-color)' }}>
-                                        <td style={{ padding: '1rem' }}>Present Days</td>
-                                        <td style={{ padding: '1rem', textAlign: 'right' }}>{Math.min(selectedSlip.inputs.present || 0, daysInCurrentMonth)}</td>
+                                        <td style={{ padding: '0.45rem 0.75rem' }}>Present Days</td>
+                                        <td style={{ padding: '0.45rem 0.75rem', textAlign: 'right' }}>{Math.min(selectedSlip.inputs.present || 0, daysInCurrentMonth)}</td>
                                     </tr>
                                     <tr style={{ borderBottom: '1px solid var(--bg-color)' }}>
-                                        <td style={{ padding: '1rem' }}>Half Days</td>
-                                        <td style={{ padding: '1rem', textAlign: 'right' }}>{selectedSlip.inputs.halfDays || 0}</td>
+                                        <td style={{ padding: '0.45rem 0.75rem' }}>Half Days</td>
+                                        <td style={{ padding: '0.45rem 0.75rem', textAlign: 'right' }}>{selectedSlip.inputs.halfDays || 0}</td>
                                     </tr>
                                     <tr style={{ borderBottom: '1px solid var(--bg-color)' }}>
-                                        <td style={{ padding: '1rem' }}>Paid Leaves</td>
-                                        <td style={{ padding: '1rem', textAlign: 'right' }}>{selectedSlip.paidLeaves}</td>
+                                        <td style={{ padding: '0.45rem 0.75rem' }}>Paid Leaves</td>
+                                        <td style={{ padding: '0.45rem 0.75rem', textAlign: 'right' }}>{selectedSlip.paidLeaves}</td>
                                     </tr>
                                     <tr style={{ borderBottom: '1px solid var(--bg-color)' }}>
-                                        <td style={{ padding: '1rem' }}>Paid Off Duty</td>
-                                        <td style={{ padding: '1rem', textAlign: 'right' }}>{selectedSlip.inputs.offDuty || 0}</td>
+                                        <td style={{ padding: '0.45rem 0.75rem' }}>Paid Off Duty</td>
+                                        <td style={{ padding: '0.45rem 0.75rem', textAlign: 'right' }}>{selectedSlip.inputs.offDuty || 0}</td>
                                     </tr>
                                     <tr style={{ borderTop: '2px solid var(--border-color)', backgroundColor: 'var(--primary-light)' }}>
-                                        <td style={{ padding: '1rem', fontWeight: 600 }}>Total Payable Days</td>
-                                        <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 600 }}>{Number(selectedSlip.payableDays).toLocaleString('en-IN', { maximumFractionDigits: 1 })}</td>
+                                        <td style={{ padding: '0.45rem 0.75rem', fontWeight: 600 }}>Total Payable Days</td>
+                                        <td style={{ padding: '0.45rem 0.75rem', textAlign: 'right', fontWeight: 600 }}>{Number(selectedSlip.payableDays).toLocaleString('en-IN', { maximumFractionDigits: 1 })}</td>
                                     </tr>
                                     <tr style={{ borderBottom: '1px solid var(--bg-color)' }}>
-                                        <td style={{ padding: '1rem', color: selectedSlip.absenceDeduction > 0 ? 'var(--danger)' : 'inherit' }}>Less: Absences ({Number(selectedSlip.absentDays).toLocaleString('en-IN', { maximumFractionDigits: 1 })} days)</td>
-                                        <td style={{ padding: '1rem', textAlign: 'right', color: selectedSlip.absenceDeduction > 0 ? 'var(--danger)' : 'inherit' }}>
+                                        <td style={{ padding: '0.45rem 0.75rem', color: selectedSlip.absenceDeduction > 0 ? 'var(--danger)' : 'inherit' }}>Less: Absences ({Number(selectedSlip.absentDays).toLocaleString('en-IN', { maximumFractionDigits: 1 })} days)</td>
+                                        <td style={{ padding: '0.45rem 0.75rem', textAlign: 'right', color: selectedSlip.absenceDeduction > 0 ? 'var(--danger)' : 'inherit' }}>
                                             -₹{selectedSlip.absenceDeduction.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                         </td>
                                     </tr>
                                     <tr style={{ borderBottom: '1px solid var(--bg-color)' }}>
-                                        <td style={{ padding: '1rem' }}>Gross Salary Amount</td>
-                                        <td style={{ padding: '1rem', textAlign: 'right' }}>₹{(selectedSlip.baseSalary - selectedSlip.absenceDeduction).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                        <td style={{ padding: '0.45rem 0.75rem' }}>Gross Salary Amount</td>
+                                        <td style={{ padding: '0.45rem 0.75rem', textAlign: 'right' }}>₹{(selectedSlip.baseSalary - selectedSlip.absenceDeduction).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
                                     </tr>
                                     {(selectedSlip.inputs.collection || 0) > 0 && (
                                         <tr style={{ borderBottom: '1px solid var(--bg-color)' }}>
-                                            <td style={{ padding: '1rem', color: 'var(--danger)' }}>Less: Collections</td>
-                                            <td style={{ padding: '1rem', textAlign: 'right', color: 'var(--danger)' }}>-₹{selectedSlip.inputs.collection.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                            <td style={{ padding: '0.45rem 0.75rem', color: 'var(--danger)' }}>Less: Collections</td>
+                                            <td style={{ padding: '0.45rem 0.75rem', textAlign: 'right', color: 'var(--danger)' }}>-₹{selectedSlip.inputs.collection.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
                                         </tr>
                                     )}
                                     {(selectedSlip.inputs.collection || 0) < 0 && (
                                         <tr style={{ borderBottom: '1px solid var(--bg-color)' }}>
-                                            <td style={{ padding: '1rem', color: 'var(--success)' }}>Add: Collection Disbursement</td>
-                                            <td style={{ padding: '1rem', textAlign: 'right', color: 'var(--success)' }}>+₹{Math.abs(selectedSlip.inputs.collection).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                            <td style={{ padding: '0.45rem 0.75rem', color: 'var(--success)' }}>Add: Collection Disbursement</td>
+                                            <td style={{ padding: '0.45rem 0.75rem', textAlign: 'right', color: 'var(--success)' }}>+₹{Math.abs(selectedSlip.inputs.collection).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
                                         </tr>
                                     )}
                                 </tbody>
@@ -527,12 +527,12 @@ export default function SalaryCalculator() {
                                 <h1 style={{ margin: 0, color: 'white' }}>₹{selectedSlip.totalSalary.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h1>
                             </div>
 
-                            <div style={{ marginTop: '4rem', display: 'flex', justifyContent: 'space-between' }}>
-                                <div style={{ borderTop: '1px solid var(--text-main)', width: '200px', paddingTop: '0.5rem', textAlign: 'center' }}>
-                                    <p style={{ margin: 0, fontSize: '0.875rem' }}>Employer Signature</p>
+                            <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between' }}>
+                                <div style={{ borderTop: '1px solid var(--text-main)', width: '180px', paddingTop: '0.4rem', textAlign: 'center' }}>
+                                    <p style={{ margin: 0, fontSize: '0.8rem' }}>Employer Signature</p>
                                 </div>
-                                <div style={{ borderTop: '1px solid var(--text-main)', width: '200px', paddingTop: '0.5rem', textAlign: 'center' }}>
-                                    <p style={{ margin: 0, fontSize: '0.875rem' }}>Employee Signature</p>
+                                <div style={{ borderTop: '1px solid var(--text-main)', width: '180px', paddingTop: '0.4rem', textAlign: 'center' }}>
+                                    <p style={{ margin: 0, fontSize: '0.8rem' }}>Employee Signature</p>
                                 </div>
                             </div>
                         </div>
