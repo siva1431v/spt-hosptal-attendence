@@ -48,17 +48,6 @@ export function AppProvider({ children }) {
         await supabase.auth.signOut();
     };
 
-    // Google OAuth sign-in
-    const signInWithGoogle = async () => {
-        const { error } = await supabase.auth.signInWithOAuth({
-            provider: 'google',
-            options: {
-                redirectTo: window.location.origin
-            }
-        });
-        if (error) throw error;
-    };
-
     // ─── Staff State (Supabase) ───────────────────────────────────────────────
     const [staff, setStaff] = useState([]);
     const [staffLoading, setStaffLoading] = useState(true);
@@ -175,7 +164,6 @@ export function AppProvider({ children }) {
             login,
             signup,
             logout,
-            signInWithGoogle,
             staff,
             staffLoading,
             attendance,
